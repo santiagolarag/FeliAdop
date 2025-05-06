@@ -1,5 +1,6 @@
 package com.example.feliadop.data
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -32,6 +33,11 @@ data class RemotePetDetail(
     val edad: String,
     val estado: String,
     val genero: String,
+    @SerialName("desc_fisica") val descFisica: String,
+    @SerialName("desc_personalidad") val descPersonalidad: String,
+    @SerialName("desc_adicional") val descAdicional: String,
+    val region: String,
+    val comuna: String,
     val imagenes: List<Imagenes>
 )
 

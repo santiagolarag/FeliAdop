@@ -17,15 +17,15 @@ class HomeViewModel : ViewModel() {
 
     fun onUiReady() {
         viewModelScope.launch {
-            state = UiState(isLoading = true)
+            state = UiState(loading = true)
             state = UiState(
                 pets = petRepository.fetchPetsRepository(),
-                isLoading = false)
+                loading = false)
         }
     }
 
     data class UiState(
-        val isLoading: Boolean = false,
+        val loading: Boolean = false,
         val pets: List<Pet> = emptyList()
     )
 }

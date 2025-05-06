@@ -2,9 +2,7 @@ package com.example.feliadop.ui.screens.detail
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,12 +19,13 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.example.feliadop.ui.screens.home.Screen
 import com.example.feliadop.R
+import com.example.feliadop.ui.screens.common.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,25 +68,37 @@ fun DetailScreen(detailViewModel: DetailViewModel,
                 }
 
                 state.pet.let { pet ->
+
+                    val pety = pet?.data
+
                     AsyncImage(
-                        model = pet?.data?.imagenes[0]?.imagen,
-                        contentDescription = pet?.data?.nombre,
+                        model = pety?.imagenes?.firstOrNull()?.imagen,
+                        contentDescription = pety?.nombre,
                         contentScale = ContentScale.Crop,
-
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(16 / 9f)
-                        //.clip(MaterialTheme.shapes.small)
+                            .fillMaxSize()
+                            .clip(MaterialTheme.shapes.small)
 
                     )
-                    Text(
-                        text = pet?.data?.nombre ?: "",
-                        modifier = Modifier.padding(16.dp),
-                        style = MaterialTheme.typography.headlineMedium
-
-                    )
+                    PetInfoText(label = "Edad", value = pety?.edad)
+                    PetInfoText(label = "Descripción Física", value = pety?.descFisica)
+                    PetInfoText(label = "Descripción Personalidad", value = pety?.descPersonalidad)
+                    PetInfoText(label = "Descripción Adicional", value = pety?.descAdicional)
+                    PetInfoText(label = "Región", value = pety?.region)
+                    PetInfoText(label = "Comuna", value = pety?.comuna)
                 }
             }
         }
+    }
+}
+
+@Composable
+fun PetInfoText(label: String, value: String?) {
+    if (value != null && value.isNotBlank()) {
+        Text(
+            text = "$label: $value",
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
