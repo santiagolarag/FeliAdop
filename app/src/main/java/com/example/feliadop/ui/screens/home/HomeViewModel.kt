@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.feliadop.data.Pet
+import com.example.feliadop.data.PetClient
 import com.example.feliadop.data.PetRepository
 import kotlinx.coroutines.launch
 
@@ -13,7 +14,7 @@ class HomeViewModel : ViewModel() {
     var state by mutableStateOf(UiState())
         private set
 
-    private val petRepository = PetRepository()
+    private val petRepository = PetRepository(PetClient.instance)
 
     fun onUiReady() {
         viewModelScope.launch {
