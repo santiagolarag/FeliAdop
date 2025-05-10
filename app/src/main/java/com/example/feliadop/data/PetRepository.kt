@@ -2,18 +2,16 @@ package com.example.feliadop.data
 
 import kotlin.collections.map
 
-class PetRepository {
+class PetRepository(private val petService: PetService) {
 
     suspend fun fetchPetsRepository(): List<Pet> =
-        PetClient
-            .instance
+        petService
             .fetchPetsService()
             .data
             .map { it.toDomainModel() }
 
     suspend fun findPetById(id: Int): RemoteResult2 =
-        PetClient
-            .instance
+        petService
             .fetchPetByIdService(id)
 }
 
