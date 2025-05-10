@@ -5,13 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.feliadop.data.PetClient
 import com.example.feliadop.data.PetRepository
 import com.example.feliadop.data.RemoteResult2
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val id: Int): ViewModel() {
 
-    private val petRepository = PetRepository()
+    private val petRepository = PetRepository(PetClient.instance)
 
     var state by mutableStateOf(UiState())
         private set
