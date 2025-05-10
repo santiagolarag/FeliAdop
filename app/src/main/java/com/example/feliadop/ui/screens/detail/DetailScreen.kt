@@ -1,6 +1,5 @@
 package com.example.feliadop.ui.screens.detail
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,7 +7,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -17,7 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -25,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.feliadop.R
+import com.example.feliadop.ui.screens.common.LoadingProgressIndicator
 import com.example.feliadop.ui.screens.common.Screen
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,14 +55,7 @@ fun DetailScreen(detailViewModel: DetailViewModel,
                     .verticalScroll(rememberScrollState())
             ) {
                 if (state.loading) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    LoadingProgressIndicator(modifier = Modifier.padding(padding))
                 }
 
                 state.pet.let { pet ->
