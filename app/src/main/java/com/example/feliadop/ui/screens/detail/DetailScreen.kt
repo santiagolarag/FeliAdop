@@ -14,9 +14,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,25 +33,16 @@ import com.example.feliadop.ui.screens.common.Screen
 @Composable
 fun DetailScreen(detailViewModel: DetailViewModel,
                  onBack: () -> Unit) {
-    val state = detailViewModel.state
+    val state by detailViewModel.state.collectAsState()
+    val title = state.pet?.data?.nombre ?: ""
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
     Screen {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(text = state.pet?.data?.nombre ?: "") },
-                    navigationIcon = {
-                        IconButton(
-                            onClick =
-                                onBack
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = stringResource(id = R.string.back)
-                            )
-                        }
-                    }
-                )
-            }
+                DetailTopBar(title, scrollBehavior, onBack)
+            },
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
         ) { padding ->
             Column(
                 modifier = Modifier
@@ -60,27 +55,46 @@ fun DetailScreen(detailViewModel: DetailViewModel,
 
                 state.pet.let { pet ->
 
-                    val pety = pet?.data
+                    val petty = pet?.data
 
                     AsyncImage(
-                        model = pety?.imagenes?.firstOrNull()?.imagen,
-                        contentDescription = pety?.nombre,
+                        model = petty?.imagenes?.firstOrNull()?.imagen,
+                        contentDescription = petty?.nombre,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(MaterialTheme.shapes.small)
-
                     )
-                    PetInfoText(label = "Edad", value = pety?.edad)
-                    PetInfoText(label = "Descripción Física", value = pety?.descFisica)
-                    PetInfoText(label = "Descripción Personalidad", value = pety?.descPersonalidad)
-                    PetInfoText(label = "Descripción Adicional", value = pety?.descAdicional)
-                    PetInfoText(label = "Región", value = pety?.region)
-                    PetInfoText(label = "Comuna", value = pety?.comuna)
+                    PetInfoText(label = "Edad", value = petty?.edad)
+                    PetInfoText(label = "Descripción Física", value = petty?.descFisica)
+                    PetInfoText(label = "Descripción Personalidad", value = petty?.descPersonalidad)
+                    PetInfoText(label = "Descripción Adicional", value = petty?.descAdicional)
+                    PetInfoText(label = "Región", value = petty?.region)
+                    PetInfoText(label = "Comuna", value = petty?.comuna)
                 }
             }
         }
     }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun DetailTopBar(
+    title: String,
+    scrollBehavior: TopAppBarScrollBehavior,
+    onBack: () -> Unit
+) {
+    TopAppBar(
+        title = { Text(text = title) },
+        scrollBehavior = scrollBehavior,
+        navigationIcon = {
+            IconButton(onClick = onBack) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                    contentDescription = stringResource(id = R.string.back)
+                )
+            }
+        }
+    )
 }
 
 @Composable
