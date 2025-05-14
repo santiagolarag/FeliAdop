@@ -1,4 +1,4 @@
-package com.example.feliadop.ui.screens
+package com.example.feliadop.ui.screens.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -15,18 +15,18 @@ import com.example.feliadop.ui.screens.home.HomeScreen
 fun Navigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
+        composable(NavRouter.Home.route) {
             HomeScreen(
                 onPetClick = { pet ->
-                    navController.navigate("detail/${pet.id}")
+                    navController.navigate(NavRouter.Detail.createRoute(pet.id))
                 }
             )
         }
         composable(
-            route = "detail/{petId}",
-            arguments = listOf(navArgument("petId") { type = NavType.IntType })
+            route = NavRouter.Detail.route,
+            arguments = listOf(navArgument(NavArgs.PetId.key) { type = NavType.IntType })
         ) { backStackEntry ->
-            val petId = requireNotNull(backStackEntry.arguments?.getInt("petId"))
+            val petId = requireNotNull(backStackEntry.arguments?.getInt(NavArgs.PetId.key))
             DetailScreen(
                 viewModel { DetailViewModel(id = petId) },
                 onBack = { navController.popBackStack() }
