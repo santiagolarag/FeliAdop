@@ -1,25 +1,25 @@
 package com.example.feliadop.ui.screens.home
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.example.feliadop.data.Pet
 import com.example.feliadop.data.PetClient
 import com.example.feliadop.data.PetRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-    var state by mutableStateOf(UiState())
-        private set
+    private val _state = MutableStateFlow(UiState())
+    val state: StateFlow<UiState> = _state.asStateFlow()
 
     private val petRepository = PetRepository(PetClient.instance)
 
     fun onUiReady() {
         viewModelScope.launch {
-            state = UiState(loading = true)
-            state = UiState(
+            _state.value = UiState(loading = true)
+            _state.value = UiState(
                 pets = petRepository.fetchPetsRepository(),
                 loading = false)
         }
