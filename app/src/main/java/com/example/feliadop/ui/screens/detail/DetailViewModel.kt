@@ -1,26 +1,26 @@
 package com.example.feliadop.ui.screens.detail
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.feliadop.data.PetClient
 import com.example.feliadop.data.PetRepository
 import com.example.feliadop.data.RemoteResult2
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val id: Int): ViewModel() {
 
     private val petRepository = PetRepository(PetClient.instance)
 
-    var state by mutableStateOf(UiState())
-        private set
+    private val _state = MutableStateFlow(UiState())
+    val state: StateFlow<UiState> = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
-            state = UiState(loading = true)
-            state = UiState(loading = false, pet = petRepository.findPetById(id))
+            _state.value = UiState(loading = true)
+            _state.value = UiState(loading = false, pet = petRepository.findPetById(id))
         }
     }
 
